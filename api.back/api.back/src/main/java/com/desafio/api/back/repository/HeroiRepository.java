@@ -9,7 +9,4 @@ import java.util.List;
 
 @Repository
 public interface HeroiRepository  extends JpaRepository<Heroi, Integer> {
-
-    @EntityGraph(attributePaths = "superpoderes")
-    List<Heroi> findAll();
 }
