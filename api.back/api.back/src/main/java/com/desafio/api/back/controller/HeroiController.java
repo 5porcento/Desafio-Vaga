@@ -59,6 +59,11 @@ public class HeroiController {
         return heroiService.atualizarHeroi(id, request);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarHeroi(@PathVariable Integer id) {
+        return heroiService.deletarHeroi(id);
+    }
+
 
 
 

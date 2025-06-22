@@ -32,13 +32,10 @@ public class HeroiService {
     }
 
     public Heroi salvarHeroi(HeroiRequest dto) {
-        // Buscar os superpoderes pelo ID antes de salvar (para evitar DetachedEntityException)
         List<Superpoderes> superpoderes = superPoderesRepository.findAllById(dto.superpoderes());
 
-        // Mapear o DTO para a entidade Heroi, agora com os superpoderes já gerenciados
         Heroi heroi = NewMapper.toHeroi(dto, superpoderes);
 
-        // Salvar o heroi
         return heroiRepository.save(heroi);
     }
 
@@ -58,15 +55,12 @@ public class HeroiService {
 
         Heroi heroiExistente = heroiExistenteOpt.get();
 
-        // Verificar se o nome já existe em outro herói
         Optional<Heroi> heroiComMesmoNome = heroiRepository.findByNomeHeroi(request.getNomeHeroi());
 
         if (heroiComMesmoNome.isPresent() && !heroiComMesmoNome.get().getId().equals(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Nome de herói já está em uso por outro super-herói.");
         }
-
-        // Atualizar campos
         heroiExistente.setNome(request.getNome());
         heroiExistente.setNomeHeroi(request.getNomeHeroi());
         heroiExistente.setAltura(request.getAltura());
@@ -82,6 +76,17 @@ public class HeroiService {
         return ResponseEntity.ok(heroiAtualizado);
     }
 
+    @Transactional
+    public ResponseEntity<?> deletarHeroi(Integer id) {
+        Optional<Heroi> heroiExistenteOpt = heroiRepository.findById(id);
+        if (heroiExistenteOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Herói com ID " + id + " não encontrado.");
+        }
+        heroiRepository.deleteById(id);
+
+        return ResponseEntity.ok("Herói com o ID " + id + " foi excluído com sucesso.");
+    }
 
 
 
