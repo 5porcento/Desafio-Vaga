@@ -5,15 +5,16 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class HeroiRequestDTO {
-        private int id;
+        private Integer id;
         private String nome;
         private String nomeHeroi;
-        private List<Superpoderes> superpoderes;
+        private List<Integer> superpoderesid;
         private LocalDate dataNascimento;
         private float altura;
         private float peso;

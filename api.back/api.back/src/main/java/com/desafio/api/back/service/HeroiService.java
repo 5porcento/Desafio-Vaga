@@ -1,12 +1,11 @@
 package com.desafio.api.back.service;
 
-import com.desafio.api.back.entity.DTO.HeroiRequestDTO;
 import com.desafio.api.back.entity.Heroi;
-import com.desafio.api.back.entity.mapper.HeroiMapper;
+import com.desafio.api.back.entity.Superpoderes;
+import com.desafio.api.back.entity.DTO.HeroiRequest;
+import com.desafio.api.back.entity.mapper.NewMapper;
 import com.desafio.api.back.repository.HeroiRepository;
 import com.desafio.api.back.repository.SuperPoderesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +14,10 @@ import java.util.List;
 public class HeroiService {
 
     private final HeroiRepository heroiRepository;
-    private HeroiMapper heroiMapper;
     private final SuperPoderesRepository superPoderesRepository;
 
-    public HeroiService(HeroiRepository heroiRepository, HeroiMapper heroiMapper, SuperPoderesRepository superPoderesRepository) {
+    public HeroiService(HeroiRepository heroiRepository, SuperPoderesRepository superPoderesRepository) {
         this.heroiRepository = heroiRepository;
-        this.heroiMapper = heroiMapper;
         this.superPoderesRepository = superPoderesRepository;
     }
 
@@ -28,11 +25,14 @@ public class HeroiService {
         return heroiRepository.findAll();
     }
 
-    public HeroiRequestDTO cadastrarHeroi(HeroiRequestDTO heroiDTO) {
-        Heroi heroiCriado = new HeroiMapper().map(heroiDTO);
-        heroiCriado = heroiRepository.save(heroiCriado);
-        return heroiMapper.map(heroiCriado);
+    public Heroi salvarHeroi(HeroiRequest dto) {
+        // Buscar os superpoderes pelo ID antes de salvar (para evitar DetachedEntityException)
+        List<Superpoderes> superpoderes = superPoderesRepository.findAllById(dto.superpoderes());
+
+        // Mapear o DTO para a entidade Heroi, agora com os superpoderes já gerenciados
+        Heroi heroi = NewMapper.toHeroi(dto, superpoderes);
+
+        // Salvar o heroi
+        return heroiRepository.save(heroi);
     }
-
-
 }

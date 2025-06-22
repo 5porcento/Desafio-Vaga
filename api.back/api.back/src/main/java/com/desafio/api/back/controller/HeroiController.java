@@ -1,8 +1,15 @@
 package com.desafio.api.back.controller;
 
+import com.desafio.api.back.entity.DTO.HeroiRequest;
 import com.desafio.api.back.entity.DTO.HeroiRequestDTO;
+import com.desafio.api.back.entity.DTO.HeroiResponse;
 import com.desafio.api.back.entity.Heroi;
+import com.desafio.api.back.entity.Superpoderes;
+import com.desafio.api.back.entity.mapper.NewMapper;
+import com.desafio.api.back.repository.HeroiRepository;
+import com.desafio.api.back.repository.SuperPoderesRepository;
 import com.desafio.api.back.service.HeroiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/heroi")
 public class HeroiController {
+
+    @Autowired
+    private HeroiRepository heroiRepository;
+    @Autowired
+    private SuperPoderesRepository superPoderesRepository;
 
     private final HeroiService heroiService;
     public HeroiController(HeroiService heroiService) {
@@ -28,9 +40,11 @@ public class HeroiController {
         return ResponseEntity.ok(herois);
     }
 
-    @PostMapping("/criar")
-    public HeroiRequestDTO criar(@RequestBody HeroiRequestDTO heroiDTO) {
-        return heroiService.cadastrarHeroi(heroiDTO);
+    @PostMapping
+    public HeroiResponse save(@RequestBody HeroiRequest dto) {
+        Heroi heroi = heroiService.salvarHeroi(dto);
+        return NewMapper.toHeroiResponse(heroi);
     }
+
 
 }
