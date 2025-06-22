@@ -46,5 +46,13 @@ public class HeroiController {
         return NewMapper.toHeroiResponse(heroi);
     }
 
+    //TODO: adicionar tratamento de erro
+    @GetMapping("/pegar/{id}")
+   public ResponseEntity<HeroiResponse> findHeroiById(@PathVariable Integer id) {
+      return heroiService.findById(id)
+                .map(heroi -> ResponseEntity.ok(NewMapper.toHeroiResponse(heroi)))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
 
 }

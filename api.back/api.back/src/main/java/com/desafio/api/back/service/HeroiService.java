@@ -1,14 +1,17 @@
 package com.desafio.api.back.service;
 
+import com.desafio.api.back.entity.DTO.HeroiRequestDTO;
 import com.desafio.api.back.entity.Heroi;
 import com.desafio.api.back.entity.Superpoderes;
 import com.desafio.api.back.entity.DTO.HeroiRequest;
 import com.desafio.api.back.entity.mapper.NewMapper;
 import com.desafio.api.back.repository.HeroiRepository;
 import com.desafio.api.back.repository.SuperPoderesRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HeroiService {
@@ -34,5 +37,9 @@ public class HeroiService {
 
         // Salvar o heroi
         return heroiRepository.save(heroi);
+    }
+
+    public Optional<Heroi> findById (Integer id) {
+        return heroiRepository.findById(id);
     }
 }
