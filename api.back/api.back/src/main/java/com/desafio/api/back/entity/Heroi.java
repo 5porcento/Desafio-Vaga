@@ -22,8 +22,8 @@ public class Heroi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
     private String nome;
+    @Column(unique = true)
     private String nomeHeroi;
 
     @ManyToMany(cascade = CascadeType.PERSIST)

@@ -55,9 +55,10 @@ public class HeroiController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HeroiResponse> atualizarHeroi(@PathVariable Integer id, @RequestBody HeroiRequest dto) {
-        Heroi heroiAtualizado = heroiService.atualizarHeroi(id, dto);
-        return ResponseEntity.ok(NewMapper.toHeroiResponse(heroiAtualizado));
+    public ResponseEntity<HeroiResponse> atualizarHeroi(@PathVariable Integer id, @RequestBody HeroiRequest request) {
+        Heroi heroiAtualizado = heroiService.atualizarHeroi(id, request);
+        HeroiResponse response = NewMapper.toHeroiResponse(heroiAtualizado);
+        return ResponseEntity.ok(response);
     }
 
 
