@@ -8,6 +8,8 @@ import com.desafio.api.back.repository.HeroiRepository;
 import com.desafio.api.back.repository.SuperPoderesRepository;
 import jakarta.transaction.Transactional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,33 +48,40 @@ public class HeroiService {
 
 
     @Transactional
-    public Heroi atualizarHeroi(Integer id, HeroiRequest request) {
-        Heroi heroiExistente = heroiRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Herói com ID " + id + " não encontrado."));
+    public ResponseEntity<?> atualizarHeroi(Integer id, Heroi request) {
+        Optional<Heroi> heroiExistenteOpt = heroiRepository.findById(id);
 
-        Optional<Heroi> heroiComMesmoNome = heroiRepository.findByNomeHeroi(request.nomeHeroi());
+        if (heroiExistenteOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Herói com ID " + id + " não encontrado.");
+        }
+
+        Heroi heroiExistente = heroiExistenteOpt.get();
+
+        // Verificar se o nome já existe em outro herói
+        Optional<Heroi> heroiComMesmoNome = heroiRepository.findByNomeHeroi(request.getNomeHeroi());
 
         if (heroiComMesmoNome.isPresent() && !heroiComMesmoNome.get().getId().equals(id)) {
-            throw new RuntimeException("Já existe um herói com o nomeHeroi: " + request.nomeHeroi());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Nome de herói já está em uso por outro super-herói.");
         }
 
-        heroiExistente.setNome(request.nome());
-        heroiExistente.setNomeHeroi(request.nomeHeroi());
-        heroiExistente.setDataNascimento(request.dataNascimento());
-        heroiExistente.setAltura(request.altura());
-        heroiExistente.setPeso(request.peso());
+        // Atualizar campos
+        heroiExistente.setNome(request.getNome());
+        heroiExistente.setNomeHeroi(request.getNomeHeroi());
+        heroiExistente.setAltura(request.getAltura());
+        heroiExistente.setPeso(request.getPeso());
+        heroiExistente.setDataNascimento(request.getDataNascimento());
 
-        if (request.superpoderes() != null) {
-            List<Superpoderes> superpoderes = request.superpoderes().stream()
-                    .map(idPoder -> superPoderesRepository.findById(idPoder)
-                            .orElseThrow(() -> new RuntimeException("Superpoder com ID " + idPoder + " não encontrado.")))
-                    .toList();
-
-            heroiExistente.setSuperpoderes(new ArrayList<>(superpoderes));
+        if (request.getSuperpoderes() != null) {
+            heroiExistente.setSuperpoderes(new ArrayList<>(request.getSuperpoderes()));
         }
 
-        return heroiRepository.save(heroiExistente);
+        Heroi heroiAtualizado = heroiRepository.save(heroiExistente);
+
+        return ResponseEntity.ok(heroiAtualizado);
     }
+
 
 
 
