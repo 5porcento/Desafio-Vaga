@@ -1,5 +1,6 @@
 package com.desafio.api.back.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +25,6 @@ public class Superpoderes {
     private String descricao;
 
     @ManyToMany(mappedBy = "superpoderes")
+    @JsonIgnore
     private List<Heroi> herois;
 }
