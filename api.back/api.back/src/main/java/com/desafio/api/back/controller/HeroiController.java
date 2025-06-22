@@ -48,11 +48,20 @@ public class HeroiController {
 
     //TODO: adicionar tratamento de erro
     @GetMapping("/pegar/{id}")
-   public ResponseEntity<HeroiResponse> findHeroiById(@PathVariable Integer id) {
-      return heroiService.findById(id)
+    public ResponseEntity<HeroiResponse> findHeroiById(@PathVariable Integer id) {
+        return heroiService.findById(id)
                 .map(heroi -> ResponseEntity.ok(NewMapper.toHeroiResponse(heroi)))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HeroiResponse> atualizarHeroi(@PathVariable Integer id, @RequestBody HeroiRequest dto) {
+        Heroi heroiAtualizado = heroiService.atualizarHeroi(id, dto);
+        return ResponseEntity.ok(NewMapper.toHeroiResponse(heroiAtualizado));
+    }
+
+
+
 
 
 }

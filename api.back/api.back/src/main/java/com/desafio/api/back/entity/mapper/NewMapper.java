@@ -23,6 +23,17 @@ public class NewMapper {
                 .superpoderes(superpoderes)
                 .build();
     }
+
+    public static Heroi toHeroiUpdate(HeroiRequest dto) {
+        return Heroi.builder()
+                .nome(dto.nome())
+                .nomeHeroi(dto.nomeHeroi())
+                .dataNascimento(dto.dataNascimento())
+                .altura(dto.altura())
+                .peso(dto.peso())
+
+                .build();
+    }
     public static HeroiResponse toHeroiResponse(Heroi heroi) {
 
        List<SuperpoderesResponse> superpoderesResponses = heroi.getSuperpoderes()
