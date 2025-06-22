@@ -1,10 +1,8 @@
 package com.desafio.api.back.controller;
 
 import com.desafio.api.back.entity.DTO.HeroiRequest;
-import com.desafio.api.back.entity.DTO.HeroiRequestDTO;
 import com.desafio.api.back.entity.DTO.HeroiResponse;
 import com.desafio.api.back.entity.Heroi;
-import com.desafio.api.back.entity.Superpoderes;
 import com.desafio.api.back.entity.mapper.NewMapper;
 import com.desafio.api.back.repository.HeroiRepository;
 import com.desafio.api.back.repository.SuperPoderesRepository;
@@ -13,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +21,14 @@ import java.util.List;
 @RequestMapping("/heroi")
 public class HeroiController {
 
-    @Autowired
-    private HeroiRepository heroiRepository;
-    @Autowired
-    private SuperPoderesRepository superPoderesRepository;
+    private final HeroiRepository heroiRepository;
+    private final SuperPoderesRepository superPoderesRepository;
 
     private final HeroiService heroiService;
-    public HeroiController(HeroiService heroiService) {
+    public HeroiController(HeroiService heroiService, HeroiRepository heroiRepository, SuperPoderesRepository superPoderesRepository) {
         this.heroiService = heroiService;
+        this.heroiRepository = heroiRepository;
+        this.superPoderesRepository = superPoderesRepository;
     }
 
     @GetMapping
@@ -96,8 +93,6 @@ public class HeroiController {
     public ResponseEntity<?> deletarHeroi(@PathVariable Integer id) {
         return heroiService.deletarHeroi(id);
     }
-
-
 
 
 
